@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+
 import {
   Guardian,
   localGuardian,
@@ -7,9 +8,18 @@ import {
 } from './student.interface';
 
 const userNameSchema = new Schema<UserName>({
-  firstName: { type: String, required: true },
+  firstName: {
+    type: String,
+    required: [true, 'FirstName is Required'],
+    trim: true, //space tik kora day
+    maxlength: [20, 'Name can not be more than 20 character'],
+  },
   middleName: { type: String },
-  lastName: { type: String, required: true },
+  lastName: {
+    type: String,
+    required: [true, 'LastName is Required'],
+    maxlength: 10,
+  },
 });
 
 const guardianSchema = new Schema<Guardian>({
@@ -54,11 +64,20 @@ const localGuardianSchema = new Schema<localGuardian>({
   },
 });
 const studentSchema = new Schema<Student>({
-  id: { type: String },
-  name: userNameSchema,
-  gender: ['male', 'female'], //using enum,
+  id: { type: String, required: true, unique: true },
+  name: {
+    type: userNameSchema,
+    required: true,
+  },
+  gender: {
+    type: String,
+    enum: {
+      values: ['male', 'female', 'other'],
+      message: '{VALUE} is not supported',
+    },
+  }, //using enum,
   deathOfBirth: { type: String },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   contactNumber: { type: String, required: true },
   emergencyContactNumber: { type: String, required: true },
   bloodGroup: {
@@ -68,17 +87,24 @@ const studentSchema = new Schema<Student>({
   },
   presentAddress: { type: String, required: true },
   parmanentAddress: { type: String, required: true },
-  guardian: guardianSchema,
+  guardian: {
+    type: guardianSchema,
+    required: true,
+  },
 
-  localGuardian: localGuardianSchema,
+  localGuardian: {
+    type: localGuardianSchema,
+    required: true,
+  },
   profileImage: {
     type: String,
     required: false,
   },
   isActive: {
     type: String,
-    enum: ['active', 'block'],
-    required: true,
+    enum: ['active', 'blocked'],
+
+    default: 'active',
   },
 });
 
