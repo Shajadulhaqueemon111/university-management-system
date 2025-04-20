@@ -20,6 +20,7 @@ export type localGuardian = {
 };
 export type Student = {
   id: string;
+  password: string;
   name: UserName;
   gender: 'male' | 'female' | 'other';
   deathOfBirth: string;
@@ -33,4 +34,5 @@ export type Student = {
   localGuardian: localGuardian;
   profileImage?: string;
   isActive: 'active' | 'blocked';
+  isDeleted: boolean;
 };
