@@ -29,10 +29,6 @@ const localGuardianSchema = Joi.object({
 
 const studentValidationSchema = Joi.object({
   id: Joi.string().required(),
-  password: Joi.string().max(20).required().messages({
-    'string.empty': 'Password is required',
-    'string.max': 'Password must be at most 20 characters',
-  }),
 
   name: userNameSchema.required(),
   gender: Joi.string().valid('male', 'female', 'other').required(),
@@ -48,7 +44,7 @@ const studentValidationSchema = Joi.object({
   guardian: guardianSchema.required(),
   localGuardian: localGuardianSchema.required(),
   profileImage: Joi.string().uri().optional(),
-  isActive: Joi.string().valid('active', 'blocked').optional(),
+
   isDeleted: Joi.boolean().strict().default(false),
 });
 

@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
-
 import {
   Guardian,
   localGuardian,
   Student,
   UserName,
 } from './student.interface';
-import bcrypt from 'bcryptjs';
-import config from '../../config';
+
 const userNameSchema = new Schema<UserName>({
   firstName: {
     type: String,
@@ -68,11 +65,12 @@ const localGuardianSchema = new Schema<localGuardian>({
 const studentSchema = new Schema<Student>(
   {
     id: { type: String, required: true, unique: true },
-    password: {
-      type: String,
-      required: [true, 'pasword is required'],
 
-      maxlength: [20, 'password can not be 20 charecter'],
+    user: {
+      type: Schema.ObjectId,
+      required: [true, ' Id is required'],
+      unique: true,
+      ref: 'User',
     },
     name: {
       type: userNameSchema,
@@ -109,12 +107,7 @@ const studentSchema = new Schema<Student>(
       type: String,
       required: false,
     },
-    isActive: {
-      type: String,
-      enum: ['active', 'blocked'],
 
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -129,20 +122,6 @@ const studentSchema = new Schema<Student>(
 
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-});
-studentSchema.pre('save', async function (next) {
-  //   console.log(this, 'pre hook : we will save data');
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bycript_salt_rounded),
-  );
-  next();
-});
-studentSchema.post('save', function (doc, next) {
-  //   console.log(this, 'post hook : we will save data');
-  doc.password = '';
-  next();
 });
 
 //deleted function jeno na asa
