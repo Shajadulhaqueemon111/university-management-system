@@ -81,7 +81,7 @@ const studentSchema = new Schema<Student>(
         message: '{VALUE} is not supported',
       },
     }, //using enum,
-    deathOfBirth: { type: String },
+    deathOfBirth: { type: Date },
     email: { type: String, required: true, unique: true },
     contactNumber: { type: String, required: true },
     emergencyContactNumber: { type: String, required: true },
