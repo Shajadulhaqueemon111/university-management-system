@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserRouter } from '../modules/user/user.routes';
 import { StudentRoute } from '../modules/student/student.route';
-// import { academicSemisterRoute } from '../modules/academinSemister/academicSemister.router';
+import { academicSemisterRoute } from '../modules/academinSemister/academicSemister.router';
 
 const router = Router();
 
@@ -14,10 +14,10 @@ const modulesRoutes = [
     path: '/students',
     route: StudentRoute,
   },
-  //   {
-  //     path: '/create-academic-semister',
-  //     route: academicSemisterRoute,
-  //   },
+  {
+    path: '/academic-semister',
+    route: academicSemisterRoute,
+  },
 ];
 
 modulesRoutes.forEach((route) => router.use(route.path, route.route));

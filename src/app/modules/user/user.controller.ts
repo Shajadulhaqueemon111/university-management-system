@@ -9,7 +9,7 @@ const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
   //direct patay ta cayla
   // const studentData = req.body;
-  // const { error, value } = userZodValidationSchema.(studentData);
+
   const result = await UserService.createStudentIntoDB(password, studentData);
 
   sendResponse(res, {

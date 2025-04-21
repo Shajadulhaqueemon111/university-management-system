@@ -8,15 +8,17 @@ import {
 
 const academicSemisterSchema = new Schema<TacademicSemister>({
   name: {
+    type: String,
     enum: AcademicSemisterName,
     required: true,
   },
   code: {
+    type: String,
     enum: AcademicSemisterCode,
     required: true,
   },
   year: {
-    type: Date,
+    type: String,
     required: true,
   },
   startMonth: {
