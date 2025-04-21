@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const userNameSchema = z.object({
+const userNameValidationSchema = z.object({
   firstName: z
     .string()
     .trim()
@@ -13,7 +13,7 @@ const userNameSchema = z.object({
     .nonempty('Last name is required'),
 });
 
-const guardianSchema = z.object({
+const guardianValidationSchema = z.object({
   fatherName: z.string().nonempty('Father name is required'),
   fatherOccupation: z.string().nonempty('Father occupation is required'),
   fatherContactNumber: z.string().nonempty('Father contact number is required'),
@@ -22,7 +22,7 @@ const guardianSchema = z.object({
   motherContactNumber: z.string().nonempty('Mother contact number is required'),
 });
 
-const localGuardianSchema = z.object({
+const localGuardianValidationSchema = z.object({
   name: z.string().nonempty('Local guardian name is required'),
   occupation: z.string().nonempty('Local guardian occupation is required'),
   contactNumber: z
@@ -30,10 +30,10 @@ const localGuardianSchema = z.object({
     .nonempty('Local guardian contact number is required'),
 });
 
-export const studentZodValidationSchema = z.object({
+export const createStudentZodValidationSchema = z.object({
   body: z.object({
     student: z.object({
-      name: userNameSchema,
+      name: userNameValidationSchema,
       gender: z.enum(['male', 'female', 'other'], {
         errorMap: () => ({ message: 'Gender must be male, female, or other' }),
       }),
@@ -48,8 +48,8 @@ export const studentZodValidationSchema = z.object({
       }),
       presentAddress: z.string().nonempty('Present address is required'),
       parmanentAddress: z.string().nonempty('Permanent address is required'),
-      guardian: guardianSchema,
-      localGuardian: localGuardianSchema,
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
       profileImage: z
         .string()
         .url('Profile image must be a valid URL')
@@ -60,5 +60,5 @@ export const studentZodValidationSchema = z.object({
 });
 
 export const studentZodValidations = {
-  studentZodValidationSchema,
+  createStudentZodValidationSchema,
 };
