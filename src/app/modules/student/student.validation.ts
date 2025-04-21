@@ -1,51 +1,64 @@
-import Joi from 'joi';
+import { z } from 'zod';
 
-const userNameSchema = Joi.object({
-  firstName: Joi.string().trim().max(20).required().messages({
-    'string.empty': 'First name is required',
-    'string.max': 'First name must be at most 20 characters',
+const userNameSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .max(20, 'First name must be at most 20 characters')
+    .nonempty('First name is required'),
+  middleName: z.string().optional().nullable(),
+  lastName: z
+    .string()
+    .max(10, 'Last name must be at most 10 characters')
+    .nonempty('Last name is required'),
+});
+
+const guardianSchema = z.object({
+  fatherName: z.string().nonempty('Father name is required'),
+  fatherOccupation: z.string().nonempty('Father occupation is required'),
+  fatherContactNumber: z.string().nonempty('Father contact number is required'),
+  motherName: z.string().nonempty('Mother name is required'),
+  motherOccupation: z.string().nonempty('Mother occupation is required'),
+  motherContactNumber: z.string().nonempty('Mother contact number is required'),
+});
+
+const localGuardianSchema = z.object({
+  name: z.string().nonempty('Local guardian name is required'),
+  occupation: z.string().nonempty('Local guardian occupation is required'),
+  contactNumber: z
+    .string()
+    .nonempty('Local guardian contact number is required'),
+});
+
+export const studentZodValidationSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: userNameSchema,
+      gender: z.enum(['male', 'female', 'other'], {
+        errorMap: () => ({ message: 'Gender must be male, female, or other' }),
+      }),
+      deathOfBirth: z.string().optional(),
+      email: z.string().email('Invalid email address'),
+      contactNumber: z.string().nonempty('Contact number is required'),
+      emergencyContactNumber: z
+        .string()
+        .nonempty('Emergency contact number is required'),
+      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
+        errorMap: () => ({ message: 'Invalid blood group' }),
+      }),
+      presentAddress: z.string().nonempty('Present address is required'),
+      parmanentAddress: z.string().nonempty('Permanent address is required'),
+      guardian: guardianSchema,
+      localGuardian: localGuardianSchema,
+      profileImage: z
+        .string()
+        .url('Profile image must be a valid URL')
+        .optional(),
+      isDeleted: z.boolean().default(false),
+    }),
   }),
-  middleName: Joi.string().allow(null, '').optional(),
-  lastName: Joi.string().max(10).required().messages({
-    'string.empty': 'Last name is required',
-    'string.max': 'Last name must be at most 10 characters',
-  }),
 });
 
-const guardianSchema = Joi.object({
-  fatherName: Joi.string().required(),
-  fatherOccupation: Joi.string().required(),
-  fatherContactNumber: Joi.string().required(),
-  motherName: Joi.string().required(),
-  motherOccupation: Joi.string().required(),
-  motherContactNumber: Joi.string().required(),
-});
-
-const localGuardianSchema = Joi.object({
-  name: Joi.string().required(),
-  occupation: Joi.string().required(),
-  contactNumber: Joi.string().required(),
-});
-
-const studentValidationSchema = Joi.object({
-  id: Joi.string().required(),
-
-  name: userNameSchema.required(),
-  gender: Joi.string().valid('male', 'female', 'other').required(),
-  deathOfBirth: Joi.string().optional(),
-  email: Joi.string().email().required(),
-  contactNumber: Joi.string().required(),
-  emergencyContactNumber: Joi.string().required(),
-  bloodGroup: Joi.string()
-    .valid('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')
-    .required(),
-  presentAddress: Joi.string().required(),
-  parmanentAddress: Joi.string().required(),
-  guardian: guardianSchema.required(),
-  localGuardian: localGuardianSchema.required(),
-  profileImage: Joi.string().uri().optional(),
-
-  isDeleted: Joi.boolean().strict().default(false),
-});
-
-export default studentValidationSchema;
+export const studentZodValidations = {
+  studentZodValidationSchema,
+};

@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentServices } from './student.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import { promise } from 'zod';
+import catchAsync from '../../utils/catchAsync';
 
-const catchAsync = (fn: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((err: any) => next(err));
-  };
-};
+//avoide repitation of try catch ,use CatchAsync
+
 const getAllStudents: RequestHandler = catchAsync(async (req, res, next) => {
   const result = await StudentServices.getAllStudentFromDB();
 
