@@ -6,38 +6,43 @@ import {
   Months,
 } from './academicSemister.const';
 
-const academicSemisterSchema = new Schema<TacademicSemister>({
-  name: {
-    type: String,
-    enum: AcademicSemisterName,
-    required: true,
+const academicSemisterSchema = new Schema<TacademicSemister>(
+  {
+    name: {
+      type: String,
+      enum: AcademicSemisterName,
+      required: true,
+    },
+    code: {
+      type: String,
+      enum: AcademicSemisterCode,
+      required: true,
+    },
+    year: {
+      type: String,
+      required: true,
+    },
+    startMonth: {
+      type: String,
+      enum: Months,
+      required: true,
+    },
+    endMonth: {
+      type: String,
+      enum: Months,
+      required: true,
+    },
   },
-  code: {
-    type: String,
-    enum: AcademicSemisterCode,
-    required: true,
+
+  {
+    timestamps: true,
   },
-  year: {
-    type: String,
-    required: true,
-  },
-  startMonth: {
-    type: String,
-    enum: Months,
-    required: true,
-  },
-  endMonth: {
-    type: String,
-    enum: Months,
-    required: true,
-  },
-});
+);
 // akoy year a aki name kono semister create off korar jonno pre hook and condition user
 academicSemisterSchema.pre('save', async function (next) {
   const isSemisterExists = await AcademicSemisterModel.findOne({
     year: this.year,
     name: this.name,
-    code: this.code,
   });
   if (isSemisterExists) {
     throw new Error('Semister is Already Exists');

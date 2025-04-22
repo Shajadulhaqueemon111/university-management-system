@@ -21,4 +21,10 @@ export type TacademicSemister = {
   year: string;
   startMonth: TMonths;
   endMonth: TMonths;
+  createdAt: string;
+  updatedAt: string;
+};
+//semister name and code jodi same hoy tahole mapper ar maddoma error diba
+export type TacademicSemisterNameCodeMapper = {
+  [key: string]: string;
 };
