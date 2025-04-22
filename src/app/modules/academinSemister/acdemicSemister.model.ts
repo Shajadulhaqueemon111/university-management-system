@@ -33,6 +33,16 @@ const academicSemisterSchema = new Schema<TacademicSemister>({
   },
 });
 
+academicSemisterSchema.pre('save', async function (next) {
+  const isSemisterExists = await AcademicSemisterModel.findOne({
+    year: this.year,
+    name: this.name,
+  });
+  if (isSemisterExists) {
+    throw new Error('Semister is Already Exists');
+  }
+  next();
+});
 const AcademicSemisterModel = model<TacademicSemister>(
   'AcademicSemisterModel',
   academicSemisterSchema,
