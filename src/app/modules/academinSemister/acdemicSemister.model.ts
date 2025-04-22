@@ -32,11 +32,12 @@ const academicSemisterSchema = new Schema<TacademicSemister>({
     required: true,
   },
 });
-
+// akoy year a aki name kono semister create off korar jonno pre hook and condition user
 academicSemisterSchema.pre('save', async function (next) {
   const isSemisterExists = await AcademicSemisterModel.findOne({
     year: this.year,
     name: this.name,
+    code: this.code,
   });
   if (isSemisterExists) {
     throw new Error('Semister is Already Exists');
