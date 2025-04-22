@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import {
   Guardian,
   localGuardian,
-  Student,
+  TStudent,
   UserName,
 } from './student.interface';
 
@@ -62,13 +62,18 @@ const localGuardianSchema = new Schema<localGuardian>({
     required: true,
   },
 });
-const studentSchema = new Schema<Student>(
+const studentSchema = new Schema<TStudent>(
   {
     user: {
       type: Schema.ObjectId,
       required: [true, ' Id is required'],
       unique: true,
       ref: 'User',
+    },
+    id: {
+      type: String,
+      required: [true, 'ID is required'],
+      unique: true,
     },
     name: {
       type: userNameSchema,
@@ -110,6 +115,10 @@ const studentSchema = new Schema<Student>(
       type: Boolean,
       default: false,
     },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemiester',
+    },
   },
   {
     toJSON: {
@@ -128,5 +137,5 @@ studentSchema.pre('find', function (next) {
   next();
 });
 
-const StudentModel = model<Student>('Student', studentSchema);
+const StudentModel = model<TStudent>('Student', studentSchema);
 export default StudentModel;

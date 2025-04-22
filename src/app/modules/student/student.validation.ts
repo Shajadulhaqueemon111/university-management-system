@@ -37,7 +37,7 @@ export const createStudentZodValidationSchema = z.object({
       gender: z.enum(['male', 'female', 'other'], {
         errorMap: () => ({ message: 'Gender must be male, female, or other' }),
       }),
-      deathOfBirth: z.date().optional(),
+      deathOfBirth: z.string().optional(),
       email: z.string().email('Invalid email address'),
       contactNumber: z.string().nonempty('Contact number is required'),
       emergencyContactNumber: z
@@ -49,7 +49,9 @@ export const createStudentZodValidationSchema = z.object({
       presentAddress: z.string().nonempty('Present address is required'),
       parmanentAddress: z.string().nonempty('Permanent address is required'),
       guardian: guardianValidationSchema,
+
       localGuardian: localGuardianValidationSchema,
+      admissionSemester: z.string(),
       profileImage: z
         .string()
         .url('Profile image must be a valid URL')

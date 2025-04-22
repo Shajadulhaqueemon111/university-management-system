@@ -19,6 +19,13 @@ router.get(
   '/:semisterId',
   academicSemisterController.getAllAcdemicSingleSemister,
 );
+router.patch(
+  '/:semisterId',
+  validateRequest(
+    academicSemisterZodValidation.updateAcademicSemisterValidationSchema,
+  ),
+  academicSemisterController.updateAcdemicSemister,
+);
 router.get('/', academicSemisterController.getAllAcdemicSingleSemister);
 
 export const academicSemisterRoute = router;

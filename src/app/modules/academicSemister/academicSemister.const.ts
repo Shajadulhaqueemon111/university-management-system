@@ -27,7 +27,7 @@ export const AcademicSemisterName: TacademicSemisterName[] = [
 ];
 
 export const AcademicSemisterCode: TacademicSemisterCode[] = ['01', '02', '03'];
-
+//semister name and code jodi same hoy tahole mapper ar maddoma error diba
 export const academicSemisterNameCodeMapper: TacademicSemisterNameCodeMapper = {
   Autumn: '01',
   Fall: '02',

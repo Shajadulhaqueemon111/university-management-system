@@ -7,8 +7,6 @@ import catchAsync from '../../utils/catchAsync';
 import { academicSemisterServices } from './academicSemister.service';
 const createAcademicSemister: RequestHandler = catchAsync(
   async (req, res, next) => {
-    //   const { password, student: studentData } = req.body;
-    //direct patay ta cayla
     // const studentData = req.body;
 
     const result = await academicSemisterServices.createAcademicSemisterIntoDB(
@@ -59,7 +57,7 @@ const updateAcdemicSemister: RequestHandler = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Allsingle Semister is rettrive successfully',
+      message: 'Updated Semister data is  successfully',
       data: result,
     });
   },

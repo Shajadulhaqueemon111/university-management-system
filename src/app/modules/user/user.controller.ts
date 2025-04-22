@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { NextFunction, Request, Response } from 'express';
+
 // import { userZodValidationSchema } from './user.validation';
 import { UserService } from './user.service';
 import sendResponse from '../../utils/sendResponse';

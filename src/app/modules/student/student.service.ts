@@ -1,4 +1,4 @@
-import { Student } from './student.interface';
+import { TStudent } from './student.interface';
 import StudentModel from './student.modules';
 
 const getAllStudentFromDB = async () => {
@@ -16,10 +16,10 @@ const deleteSingleStudentFromDB = async (_id: string) => {
 };
 const updateSingleStudentFromDB = async (
   _id: string,
-  updateData: Partial<Student>,
+  updateData: Partial<TStudent>,
 ) => {
-  const result = await StudentModel.findByIdAndUpdate(
-    _id, // just the ID, not { _id }
+  const result = await StudentModel.findOneAndUpdate(
+    { _id }, // just the ID, not { _id }
     updateData, // the actual data to update
     {
       new: true, // return the updated document

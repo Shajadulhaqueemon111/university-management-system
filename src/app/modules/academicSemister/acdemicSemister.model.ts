@@ -40,7 +40,7 @@ const academicSemisterSchema = new Schema<TacademicSemister>(
 );
 // akoy year a aki name kono semister create off korar jonno pre hook and condition user
 academicSemisterSchema.pre('save', async function (next) {
-  const isSemisterExists = await AcademicSemisterModel.findOne({
+  const isSemisterExists = await AcademicSemister.findOne({
     year: this.year,
     name: this.name,
   });
@@ -49,8 +49,8 @@ academicSemisterSchema.pre('save', async function (next) {
   }
   next();
 });
-const AcademicSemisterModel = model<TacademicSemister>(
-  'AcademicSemisterModel',
+const AcademicSemister = model<TacademicSemister>(
+  'AcademicSemister',
   academicSemisterSchema,
 );
-export default AcademicSemisterModel;
+export default AcademicSemister;

@@ -20,7 +20,7 @@ export type localGuardian = {
   occupation: string;
   contactNumber: string;
 };
-export type Student = {
+export type TStudent = {
   user: Types.ObjectId;
   id: string;
   password: string;
@@ -35,6 +35,7 @@ export type Student = {
   parmanentAddress: string;
   guardian: Guardian;
   localGuardian: localGuardian;
+  admissionSemester: Types.ObjectId;
   profileImage?: string;
 
   isDeleted: boolean;
