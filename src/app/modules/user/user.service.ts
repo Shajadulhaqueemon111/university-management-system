@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import config from '../../config';
 import AcademicSemister from '../academicSemister/acdemicSemister.model';
 import { TStudent } from '../student/student.interface';
@@ -5,7 +6,8 @@ import StudentModel from '../student/student.modules';
 import { TUser } from './user.interface';
 import { User } from './user.models';
 import { generateStudentId } from './user.utils';
-
+import AppError from '../../errors/AppErrors';
+import httpStatus from 'http-status';
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //create user object
   const userData: Partial<TUser> = {};
@@ -28,17 +30,24 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     );
   }
 
+  const session = await mongoose.startSession();
   //set manually genarated id
-  userData.id = await generateStudentId(admissionSemester);
-  const newUser = await User.create(userData);
+  try {
+    session.startTransaction();
+    userData.id = await generateStudentId(admissionSemester);
+    const newUser = await User.create([userData], { session }); //useing moongose session and startTransection arry system
 
-  if (Object.keys(newUser).length) {
-    //set id,_id as user
-    payload.id = newUser.id;
-    payload.user = newUser._id; //reffrence id
+    if (!newUser.length) {
+      //set id,_id as user
+      throw new AppError(httpStatus.BAD_REQUEST, 'Faild to create user');
+    }
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; //reffrence id
     const newStudent = await StudentModel.create(payload); //call the studentModel
 
     return newStudent;
+  } catch (err) {
+    console.log(err);
   }
 };
 
