@@ -2,11 +2,25 @@ import { TStudent } from './student.interface';
 import StudentModel from './student.modules';
 
 const getAllStudentFromDB = async () => {
-  const result = await StudentModel.find();
+  const result = await StudentModel.find()
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicfaculty',
+      },
+    });
   return result;
 };
 const getSingleStudentFromDB = async (_id: string) => {
-  const result = await StudentModel.findOne({ _id });
+  const result = await StudentModel.findOne({ _id })
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicfaculty',
+      },
+    });
   return result;
 };
 const deleteSingleStudentFromDB = async (_id: string) => {
