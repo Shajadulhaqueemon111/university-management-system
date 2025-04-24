@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import mongoose from 'mongoose';
 import config from '../../config';
 import AcademicSemister from '../academicSemister/acdemicSemister.model';
@@ -35,6 +36,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   try {
     session.startTransaction();
     userData.id = await generateStudentId(admissionSemester);
+    //create a user use(transaction-1)
     const newUser = await User.create([userData], { session }); //useing moongose session and startTransection arry system
 
     if (!newUser.length) {
@@ -43,11 +45,17 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     }
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reffrence id
-    const newStudent = await StudentModel.create(payload); //call the studentModel
-
+    //create a student use(transaction-2)
+    const newStudent = await StudentModel.create([payload], { session }); //call the studentModel
+    if (!newStudent) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Faild to create Student');
+    }
+    await session.commitTransaction();
+    session.endSession();
     return newStudent;
   } catch (err) {
-    console.log(err);
+    await session.abortTransaction();
+    session.endSession();
   }
 };
 
