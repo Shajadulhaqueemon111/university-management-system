@@ -92,7 +92,7 @@ const updateSingleStudentFromDB = async (
       modifiedUpdateData[`localGuardian.${keys}`] = value;
     }
   }
-  console.log(modifiedUpdateData);
+
   const result = await StudentModel.findOneAndUpdate(
     { id }, // just the ID, not { _id }
     modifiedUpdateData, // the actual data to update
