@@ -5,6 +5,7 @@ import StudentModel from './student.modules';
 import AppError from '../../errors/AppErrors';
 import httpStatus from 'http-status';
 import { User } from '../user/user.models';
+import { object } from 'joi';
 const getAllStudentFromDB = async () => {
   const result = await StudentModel.find()
     .populate('admissionSemester')
@@ -16,8 +17,8 @@ const getAllStudentFromDB = async () => {
     });
   return result;
 };
-const getSingleStudentFromDB = async (_id: string) => {
-  const result = await StudentModel.findOne({ _id })
+const getSingleStudentFromDB = async (id: string) => {
+  const result = await StudentModel.findOne({ id })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -61,21 +62,45 @@ const deleteSingleStudentFromDB = async (id: string) => {
   } catch (err) {
     await session.abortTransaction();
     await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'Faild to delete student');
   }
 };
 const updateSingleStudentFromDB = async (
-  _id: string,
-  updateData: Partial<TStudent>,
+  id: string,
+  payload: Partial<TStudent>,
 ) => {
+  const { name, guardian, localGuardian, ...remainingStudentData } = payload;
+  const modifiedUpdateData: Record<string, unknown> = {
+    ...remainingStudentData,
+  };
+
+  //  student non-premitive data dynamicaly update functino
+  if (name && Object.keys(name).length) {
+    for (const [keys, value] of Object.entries(name)) {
+      modifiedUpdateData[`name.${keys}`] = value;
+    }
+  }
+  //Localguardian non premitive data dynamicaly update functino
+  if (guardian && Object.keys(guardian).length) {
+    for (const [keys, value] of Object.entries(guardian)) {
+      modifiedUpdateData[`guardian.${keys}`] = value;
+    }
+  }
+  //guardian non premitive data update dynamicaly functino
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [keys, value] of Object.entries(localGuardian)) {
+      modifiedUpdateData[`localGuardian.${keys}`] = value;
+    }
+  }
+  console.log(modifiedUpdateData);
   const result = await StudentModel.findOneAndUpdate(
-    { _id }, // just the ID, not { _id }
-    updateData, // the actual data to update
+    { id }, // just the ID, not { _id }
+    modifiedUpdateData, // the actual data to update
     {
       new: true, // return the updated document
-      runValidators: true, // ensure validation runs
+      runValidators: true,
     },
   );
-
   return result;
 };
 
