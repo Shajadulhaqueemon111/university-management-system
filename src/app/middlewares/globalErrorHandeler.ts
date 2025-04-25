@@ -7,6 +7,7 @@ import config from '../config';
 import handlerZodError from '../errors/handleZodError';
 import handleMongooseValidationError from '../errors/handlerMongooseValidationError';
 import handlerCastError from '../errors/handlerCastError';
+import handlerDuplicateIDError from '../errors/handleDuplicateIDError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next): void => {
   let statusCode = err?.statusCode || 500;
@@ -34,6 +35,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next): void => {
     errrorSources = simplifiedError?.errrorSources;
   } else if (err?.name === 'CastError') {
     const simplifiedError = handlerCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errrorSources = simplifiedError?.errrorSources;
+  } else if (err?.code === 11000) {
+    const simplifiedError = handlerDuplicateIDError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errrorSources = simplifiedError?.errrorSources;
