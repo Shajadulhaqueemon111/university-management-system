@@ -5,9 +5,17 @@ import StudentModel from './student.modules';
 import AppError from '../../errors/AppErrors';
 import httpStatus from 'http-status';
 import { User } from '../user/user.models';
-import { object } from 'joi';
-const getAllStudentFromDB = async () => {
-  const result = await StudentModel.find()
+
+const getAllStudentFromDB = async (query: Record<string, unknown>) => {
+  let searchTerm = '';
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+  const result = await StudentModel.find({
+    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    })),
+  })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',

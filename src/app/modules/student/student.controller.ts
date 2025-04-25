@@ -9,7 +9,8 @@ import catchAsync from '../../utils/catchAsync';
 //avoide repitation of try catch ,use CatchAsync
 
 const getAllStudents: RequestHandler = catchAsync(async (req, res, next) => {
-  const result = await StudentServices.getAllStudentFromDB();
+  console.log(req.query);
+  const result = await StudentServices.getAllStudentFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
