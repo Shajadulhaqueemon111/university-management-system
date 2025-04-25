@@ -6,6 +6,7 @@ import { TErrorSources } from '../interface/errorType';
 import config from '../config';
 import handlerZodError from '../errors/handleZodError';
 import handleMongooseValidationError from '../errors/handlerMongooseValidationError';
+import handlerCastError from '../errors/handlerCastError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next): void => {
   let statusCode = err?.statusCode || 500;
@@ -31,12 +32,18 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next): void => {
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errrorSources = simplifiedError?.errrorSources;
+  } else if (err?.name === 'CastError') {
+    const simplifiedError = handlerCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errrorSources = simplifiedError?.errrorSources;
   }
 
   res.status(statusCode).json({
     success: false,
     message,
     errrorSources,
+
     err: config.node_env == 'development' ? err?.stack : null, //development environment ar somay satck use kora jabe karon exact error bijar jonn but production ar somay stack tula dita hoba securityr jonnu
   });
 };
