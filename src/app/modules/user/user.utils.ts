@@ -95,6 +95,6 @@ export const genarateAdminId = async () => {
   }
 
   const incrementAdminId = (Number(curentId) + 1).toString().padStart(4, '0');
-  const newAdminId = `F-${incrementAdminId}`;
+  const newAdminId = `A-${incrementAdminId}`;
   return newAdminId;
 };

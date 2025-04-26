@@ -17,7 +17,7 @@ app.use(cors());
 // app.use('/api/v1/users', UserRouter);
 app.use('/api/v1', router);
 app.get('/', (req: Request, res: Response) => {
-  Promise.reject();
+  // Promise.reject();
   res.send('Hello World!');
 });
 //global error handeller
