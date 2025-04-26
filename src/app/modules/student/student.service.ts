@@ -7,15 +7,26 @@ import httpStatus from 'http-status';
 import { User } from '../user/user.models';
 
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
+  console.log('base query', query);
+
+  const queryObj = { ...query };
+  //searching functinoality
+  const studentSearchAbleField = ['email', 'name.firstName', 'presentAddress'];
   let searchTerm = '';
   if (query?.searchTerm) {
     searchTerm = query?.searchTerm as string;
   }
-  const result = await StudentModel.find({
-    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+  //filterring
+  const excludeFields = ['searchTerm', 'sort'];
+  excludeFields.forEach((el) => delete queryObj[el]);
+  console.log(query, queryObj);
+  const searchQuery = StudentModel.find({
+    $or: studentSearchAbleField.map((field) => ({
       [field]: { $regex: searchTerm, $options: 'i' },
     })),
-  })
+  });
+  const filterQuery = searchQuery
+    .find(queryObj)
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -23,7 +34,13 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
         path: 'academicfaculty',
       },
     });
-  return result;
+
+  let sort = '-createdAt';
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+  const sortQuery = await filterQuery.sort(sort);
+  return sortQuery;
 };
 const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.findOne({ id })
