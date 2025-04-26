@@ -15,7 +15,7 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
     searchTerm = query?.searchTerm as string;
   }
   //filterring
-  const excludeFields = ['searchTerm', 'sort', 'limit', 'page'];
+  const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
   excludeFields.forEach((el) => delete queryObj[el]);
   console.log({ query }, { queryObj });
   const searchQuery = StudentModel.find({
@@ -48,11 +48,20 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
     page = Number(query.page);
     skip = (page - 1) * limit;
   }
+  //pagination
   const paginationQuery = sortQuery.skip(skip);
 
   //create a limitQuery function
-  const limitQuery = await paginationQuery.limit(limit);
-  return limitQuery;
+  const limitQuery = paginationQuery.limit(limit);
+
+  //fields limiting je field ta dakta issa korba seta deka jabe onno gula bad jabe
+  let fields = '-_v';
+  if (query.fields) {
+    fields = (query.fields as string).split(',').join(' ');
+    console.log({ fields });
+  }
+  const fieldQuery = await limitQuery.select(fields);
+  return fieldQuery;
 };
 const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.findOne({ id })
@@ -111,7 +120,7 @@ const updateSingleStudentFromDB = async (
     ...remainingStudentData,
   };
 
-  //  student non-premitive data dynamicaly update functino
+  //  student non-premitive data dynamicaly update functino jeta update kora dorkar seta update kora jabe
   if (name && Object.keys(name).length) {
     for (const [keys, value] of Object.entries(name)) {
       modifiedUpdateData[`name.${keys}`] = value;

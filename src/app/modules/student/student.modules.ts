@@ -132,7 +132,7 @@ const studentSchema = new Schema<TStudent>(
 );
 
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
 
 //deleted function jeno na asa
