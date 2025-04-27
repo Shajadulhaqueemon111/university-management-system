@@ -1,3 +1,5 @@
+import QueryBuilder from '../../queryBuilder/QueryBuilder';
+import { courseSearchAbleFields } from './course.constant';
 import { Course } from './course.modle';
 
 const createCourseIntoDB = async () => {
@@ -5,8 +7,14 @@ const createCourseIntoDB = async () => {
   return result;
 };
 
-const getAllCoursesIntoDB = async () => {
-  const result = await Course.find();
+const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
+  const courseQuery = new QueryBuilder(Course.find(), query)
+    .search(courseSearchAbleFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+  const result = await courseQuery.modelQuery;
   return result;
 };
 
