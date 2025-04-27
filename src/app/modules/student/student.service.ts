@@ -83,6 +83,7 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
     .fields();
 
   const result = await studentQuery.modelQuery;
+  // console.log(result);
   return result;
 };
 const getSingleStudentFromDB = async (id: string) => {
@@ -101,10 +102,10 @@ const deleteSingleStudentFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
   try {
-    const isExitsStudent = await StudentModel.findOne({ id });
-    if (!isExitsStudent) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Student not Found');
-    }
+    // const isExitsStudent = await StudentModel.findOne({ id });
+    // if (!isExitsStudent) {
+    //   throw new AppError(httpStatus.BAD_REQUEST, 'Student not Found');
+    // }
     session.startTransaction();
     // get user _id from deletedFaculty
 
