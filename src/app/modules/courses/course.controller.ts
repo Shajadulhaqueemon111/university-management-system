@@ -3,7 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import { courseServices } from './course.service';
 import httpStatus from 'http-status';
 const createCourse = catchAsync(async (req, res) => {
-  const result = await courseServices.createCourseIntoDB();
+  const result = await courseServices.createCourseIntoDB(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

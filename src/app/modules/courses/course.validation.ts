@@ -1,12 +1,10 @@
 import { z } from 'zod';
 
-// PreRequisiteCourse এর জন্য Zod schema
 const preRequisiteCourseZodSchema = z.object({
-  course: z.string(),
+  course: z.string().optional(),
   isDeleted: z.boolean().optional(),
 });
 
-// Course এর জন্য Zod schema
 const createCourseZodSchema = z.object({
   body: z.object({
     title: z
