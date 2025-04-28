@@ -30,7 +30,10 @@ const courseSchema = new Schema<TCourses>(
       required: true,
       trim: true,
     },
-
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     credites: {
       type: Number,
       required: true,
@@ -38,9 +41,14 @@ const courseSchema = new Schema<TCourses>(
     },
     preRequisiteCourses: [preRequisiteCoursesSchema],
   },
+
   {
     timestamps: true,
   },
 );
+courseSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
 export const Course = model<TCourses>('Course', courseSchema);
