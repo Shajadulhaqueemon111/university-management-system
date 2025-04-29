@@ -30,6 +30,7 @@ const loginUser = async (payload: TLogin) => {
   };
 };
 
+//change or update password function
 const changePasswordService = async (
   userData: JwtPayload,
   payload: { oldPassword: string; newPassword: string },
@@ -52,10 +53,12 @@ const changePasswordService = async (
     },
     {
       password: newHashPassword,
+      needPasswordChanged: false,
+      passwordChangedAt: new Date(),
     },
   );
   console.log(result);
-  return result;
+  return null;
 };
 export const AuthService = {
   loginUser,
