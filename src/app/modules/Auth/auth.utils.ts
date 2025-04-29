@@ -4,7 +4,8 @@ import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
 
 export const validateUserForLogin = async (id: string) => {
-  const user = await User.findOne({ id });
+  const user = await User.findOne({ id }).select('+password');
+  console.log({ user });
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user not found!');
   }

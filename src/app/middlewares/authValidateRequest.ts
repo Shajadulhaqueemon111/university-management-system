@@ -25,6 +25,7 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
             'You are not authorized token!',
           );
         }
+        //access routing baced autorization function mean using ka ka route use korta parbe
         const role = (decoded as JwtPayload).role;
         if (requiredRoles && !requiredRoles.includes(role)) {
           throw new AppError(

@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { TLogin } from './auth.interface';
 import { checkPassword, validateUserForLogin } from './auth.utils';
 import config from '../../config';
-
+import { User } from '../user/user.models';
+import bcrypt from 'bcrypt';
 const loginUser = async (payload: TLogin) => {
   //cheking if the user is exist
   const { id, password } = payload;
@@ -28,6 +29,35 @@ const loginUser = async (payload: TLogin) => {
     needPasswordChanged: user?.needsPasswordChange,
   };
 };
+
+const changePasswordService = async (
+  userData: JwtPayload,
+  payload: { oldPassword: string; newPassword: string },
+) => {
+  const user = await validateUserForLogin(userData.userId);
+
+  //checking if the password is correct
+
+  await checkPassword(payload.oldPassword, user.password);
+
+  //new change hash password
+  const newHashPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bycript_salt_rounded),
+  );
+  const result = await User.findOneAndUpdate(
+    {
+      id: userData.userId,
+      role: userData.role,
+    },
+    {
+      password: newHashPassword,
+    },
+  );
+  console.log(result);
+  return result;
+};
 export const AuthService = {
   loginUser,
+  changePasswordService,
 };

@@ -12,6 +12,8 @@ const userSchema = new Schema<TUser>(
     password: {
       type: String,
       required: true,
+      select: 0, //select: 0 mane jokon kao all student
+      //  ka get korla password field ta get kora take atkaba
     },
     needsPasswordChange: {
       type: Boolean,
