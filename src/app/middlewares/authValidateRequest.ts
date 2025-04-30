@@ -19,19 +19,14 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
       token,
       config.jwt_access_secreet as string,
     ) as JwtPayload;
-
     //access routing baced autorization function mean using ka ka route use korta parbe
     const { role, userId, iat } = decoded;
-    console.log('Decoded Token:', decoded);
-    console.log('Required Roles:', requiredRoles);
-    console.log('User Role from Token:', role);
     if (!userId || !role) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Token Payload!');
     }
 
     const user = await validateUserForLogin(userId);
 
-    console.log(user);
     //password change time valid tokon comparizon
     if (
       user.passwordChangedAt &&
@@ -54,7 +49,7 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
     }
     // decoded undefined
     req.user = decoded as JwtPayload;
-    console.log(decoded);
+
     next();
   });
 };

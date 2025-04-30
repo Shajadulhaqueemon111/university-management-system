@@ -5,6 +5,10 @@ import config from '../../config';
 import { User } from '../user/user.models';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.jwtUtils';
+import AppError from '../../errors/AppErrors';
+import httpStatus from 'http-status';
+
+import jwt from 'jsonwebtoken';
 
 const loginUser = async (payload: TLogin) => {
   //cheking if the user is exist
@@ -68,10 +72,55 @@ const changePasswordService = async (
     },
   );
 
-  console.log(result);
-  return null;
+  return result;
+};
+
+const refreshToken = async (token: string) => {
+  if (!token) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You Are Not Autorized !');
+  }
+  //check if the verify token
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refress_secreet as string,
+  ) as JwtPayload;
+  console.log(decoded);
+  //access routing baced autorization function mean using ka ka route use korta parbe
+  const { role, userId, iat } = decoded;
+  if (!userId || !role) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Token Payload!');
+  }
+
+  const user = await validateUserForLogin(userId);
+
+  //password change time valid tokon comparizon
+  if (
+    user.passwordChangedAt &&
+    iat &&
+    iat * 1000 < new Date(user.passwordChangedAt).getTime()
+  ) {
+    throw new AppError(
+      401,
+      'Password was changed after the token was issued. Please log in again.',
+    );
+  }
+
+  const jwtPayload = {
+    userId: user?.id,
+    role: user?.role,
+  };
+  console.log(jwtPayload);
+  const acessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secreet as string,
+    config.jwt_access_expires as unknown as number,
+  );
+  return {
+    acessToken,
+  };
 };
 export const AuthService = {
   loginUser,
   changePasswordService,
+  refreshToken,
 };
