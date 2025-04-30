@@ -31,3 +31,16 @@ export const checkPassword = async (
     throw new AppError(httpStatus.FORBIDDEN, 'Password is incorrect!');
   }
 };
+
+export const isJWTIssuedBeforePasswordChanged = (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number,
+): boolean => {
+  if (!passwordChangedTimestamp) return false;
+
+  const passwordChangedTime = Math.floor(
+    passwordChangedTimestamp.getTime() / 1000,
+  ); // Convert ms to seconds
+  console.log(jwtIssuedTimestamp < passwordChangedTime);
+  return jwtIssuedTimestamp < passwordChangedTime;
+};

@@ -57,6 +57,7 @@ const changePasswordService = async (
       passwordChangedAt: new Date(),
     },
   );
+
   console.log(result);
   return null;
 };

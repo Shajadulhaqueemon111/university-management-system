@@ -29,7 +29,20 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
     }
 
     const user = await validateUserForLogin(userId);
+
     console.log(user);
+
+    if (
+      user.passwordChangedAt &&
+      decoded.iat &&
+      decoded.iat * 1000 < new Date(user.passwordChangedAt).getTime()
+    ) {
+      throw new AppError(
+        401,
+        'Password was changed after the token was issued. Please log in again.',
+      );
+    }
+
     if (!user) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'User not found!');
     }

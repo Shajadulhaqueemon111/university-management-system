@@ -10,6 +10,10 @@ export type TUser = {
   status: 'in-progress' | 'blocked';
   createdAt: string;
   updatedAt: string;
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimesstamp: number,
+  ): boolean;
 };
 
 export type TUserRole = keyof typeof USER_ROLE;
