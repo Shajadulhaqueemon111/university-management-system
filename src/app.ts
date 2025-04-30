@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
-
 import globalErrorHandeler from './app/middlewares/globalErrorHandeler';
 import notFound from './app/middlewares/notFound';
 import router from './app/routes';
-
+import cookieParser from 'cookie-parser';
 const app: Application = express();
 
 app.use(express.json());
 app.use(cors());
-
+app.use(cookieParser());
+app.use(cors({ origin: ['http://localhost:5173'] }));
 //application route
 // app.use('/api/v1/students', StudentRoute);
 // app.use('/api/v1/users', UserRouter);

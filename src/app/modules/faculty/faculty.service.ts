@@ -24,7 +24,7 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment');
-
+  console.log(result);
   return result;
 };
 

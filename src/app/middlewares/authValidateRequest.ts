@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../utils/catchAsync';
@@ -23,7 +22,9 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
 
     //access routing baced autorization function mean using ka ka route use korta parbe
     const { role, userId, iat } = decoded;
-
+    console.log('Decoded Token:', decoded);
+    console.log('Required Roles:', requiredRoles);
+    console.log('User Role from Token:', role);
     if (!userId || !role) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Token Payload!');
     }
@@ -34,8 +35,8 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
     //password change time valid tokon comparizon
     if (
       user.passwordChangedAt &&
-      decoded.iat &&
-      decoded.iat * 1000 < new Date(user.passwordChangedAt).getTime()
+      iat &&
+      iat * 1000 < new Date(user.passwordChangedAt).getTime()
     ) {
       throw new AppError(
         401,
