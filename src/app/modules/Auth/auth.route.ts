@@ -29,5 +29,11 @@ router.post(
   validateRequest(AuthValidation.refreshTokenValidationSchema),
   AuthController.forgetPassword,
 );
+router.post(
+  '/reset-password',
+  // authValidateRequest('admin', 'faculty', 'student'),
+  validateRequest(AuthValidation.resetPasswordValidationSchema),
+  AuthController.resetPassword,
+);
 
 export const LoginRouter = router;

@@ -9,6 +9,7 @@ import AppError from '../../errors/AppErrors';
 import httpStatus from 'http-status';
 
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../../utils/sendEmail';
 
 const loginUser = async (payload: TLogin) => {
   //cheking if the user is exist
@@ -132,12 +133,50 @@ const forgetPassword = async (userId: string) => {
     config.jwt_access_secreet as string,
     '10m' as unknown as number,
   );
-  const resetUILink = `http://localhost:5000?id=${user.id}&token=${resetToken}`;
+  const resetUILink = `${config.rest_pass_ui_link}?id=${user.id}&token=${resetToken}`;
+  sendEmail(user.email, resetUILink);
   console.log(resetUILink);
+};
+
+const resetPassword = async (
+  payload: { id: string; newPassword: string },
+  token: string | undefined,
+) => {
+  await validateUserForLogin(payload?.id);
+  //check if the verify token
+
+  const decoded = jwt.verify(
+    token as string,
+    config.jwt_access_secreet as string, //reset ar somay acces_secret user korta hoba
+  ) as JwtPayload;
+
+  console.log(decoded);
+  if (payload.id !== decoded.userId) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You Are Forbiddent access!');
+  }
+  const newHashPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bycript_salt_rounded),
+  );
+  console.log(newHashPassword);
+  const result = await User.findOneAndUpdate(
+    {
+      id: decoded.userId,
+      role: decoded.role,
+    },
+    {
+      password: newHashPassword,
+      needPasswordChanged: false,
+      passwordChangedAt: new Date(),
+    },
+  );
+  return result;
 };
 export const AuthService = {
   loginUser,
   changePasswordService,
   refreshToken,
   forgetPassword,
+  resetPassword,
 };
+// http://localhost:5000?id=A-0001&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBLTAwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDYwNDQwMjAsImV4cCI6MTc0NjA0NDYyMH0.6bPRkfFQhQxIQx3XVmbUSOCjMLxaeTfg0IeY9s9CVVE
