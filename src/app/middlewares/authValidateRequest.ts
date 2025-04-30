@@ -31,7 +31,7 @@ const authValidateRequest = (...requiredRoles: TUserRole[]) => {
     const user = await validateUserForLogin(userId);
 
     console.log(user);
-
+    //password change time valid tokon comparizon
     if (
       user.passwordChangedAt &&
       decoded.iat &&

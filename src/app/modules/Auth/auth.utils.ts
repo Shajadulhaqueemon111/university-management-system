@@ -32,15 +32,15 @@ export const checkPassword = async (
   }
 };
 
-export const isJWTIssuedBeforePasswordChanged = (
-  passwordChangedTimestamp: Date,
-  jwtIssuedTimestamp: number,
-): boolean => {
-  if (!passwordChangedTimestamp) return false;
+// export const isJWTIssuedBeforePasswordChanged = (
+//   passwordChangedTimestamp: Date,
+//   jwtIssuedTimestamp: number,
+// ): boolean => {
+//   if (!passwordChangedTimestamp) return false;
 
-  const passwordChangedTime = Math.floor(
-    passwordChangedTimestamp.getTime() / 1000,
-  ); // Convert ms to seconds
-  console.log(jwtIssuedTimestamp < passwordChangedTime);
-  return jwtIssuedTimestamp < passwordChangedTime;
-};
+//   const passwordChangedTime = Math.floor(
+//     passwordChangedTimestamp.getTime() / 1000,
+//   ); // Convert ms to seconds
+//   console.log(jwtIssuedTimestamp < passwordChangedTime);
+//   return jwtIssuedTimestamp < passwordChangedTime;
+// };

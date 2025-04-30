@@ -1,9 +1,11 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import { TLogin } from './auth.interface';
 import { checkPassword, validateUserForLogin } from './auth.utils';
 import config from '../../config';
 import { User } from '../user/user.models';
 import bcrypt from 'bcrypt';
+import { createToken } from './auth.jwtUtils';
+
 const loginUser = async (payload: TLogin) => {
   //cheking if the user is exist
   const { id, password } = payload;
@@ -20,12 +22,20 @@ const loginUser = async (payload: TLogin) => {
     role: user?.role,
   };
   console.log(jwtPayload);
-  const acessToken = jwt.sign(jwtPayload, config.jwt_access_secreet as string, {
-    expiresIn: '10d',
-  });
+  const acessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secreet as string,
+    config.jwt_access_expires as unknown as number,
+  );
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refress_secreet as string,
+    config.jwt_refress_expires as unknown as number,
+  );
 
   return {
     acessToken,
+    refreshToken,
     needPasswordChanged: user?.needsPasswordChange,
   };
 };
