@@ -119,8 +119,25 @@ const refreshToken = async (token: string) => {
     acessToken,
   };
 };
+
+const forgetPassword = async (userId: string) => {
+  const user = await validateUserForLogin(userId);
+  const jwtPayload = {
+    userId: user?.id,
+    role: user?.role,
+  };
+
+  const resetToken = createToken(
+    jwtPayload,
+    config.jwt_access_secreet as string,
+    '10m' as unknown as number,
+  );
+  const resetUILink = `http://localhost:5000?id=${user.id}&token=${resetToken}`;
+  console.log(resetUILink);
+};
 export const AuthService = {
   loginUser,
   changePasswordService,
   refreshToken,
+  forgetPassword,
 };
