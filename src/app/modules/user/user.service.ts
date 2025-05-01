@@ -18,9 +18,13 @@ import { Faculty } from '../faculty/faculty.modle';
 import AcademicDepartment from '../academicDepartment/academicDepartment.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Admin } from '../admin/admin.modle';
-import { verifyToken } from '../Auth/auth.utils';
+
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  password: string,
+  payload: TStudent,
+  file: any,
+) => {
   //create user object
   const userData: Partial<TUser> = {};
 
@@ -49,8 +53,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     session.startTransaction();
     userData.id = await generateStudentId(admissionSemester);
 
+    // cloudinary image and path name
+    const imageName = `${userData.id}${payload?.name?.firstName}`;
+    const path = file;
     //send image to cloudanary
-    sendImageToCloudinary();
+    sendImageToCloudinary(imageName, path);
     //create a user use(transaction-1)
     const newUser = await User.create([userData], { session }); //useing moongose session and startTransection arry system
 

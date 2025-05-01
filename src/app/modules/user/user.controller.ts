@@ -5,13 +5,17 @@ import { UserService } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
-import AppError from '../../errors/AppErrors';
+
 const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
   //direct patay ta cayla
   // const studentData = req.body;
 
-  const result = await UserService.createStudentIntoDB(password, studentData);
+  const result = await UserService.createStudentIntoDB(
+    req.file as unknown as string,
+    password,
+    studentData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

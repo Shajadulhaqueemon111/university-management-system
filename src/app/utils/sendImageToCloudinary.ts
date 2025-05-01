@@ -1,7 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
+import multer from 'multer';
 
-export const sendImageToCloudinary = () => {
+export const sendImageToCloudinary = (path: string, imageName: string) => {
   (async function () {
     // Configuration
     cloudinary.config({
@@ -12,12 +13,9 @@ export const sendImageToCloudinary = () => {
 
     // Upload an image
     const uploadResult = await cloudinary.uploader
-      .upload(
-        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg',
-        {
-          public_id: 'shoes',
-        },
-      )
+      .upload(path, {
+        public_id: imageName,
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -43,3 +41,15 @@ export const sendImageToCloudinary = () => {
     console.log(autoCropUrl);
   })();
 };
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, process.cwd() + '/uploads/'); //cw corrent directory
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + '-' + uniqueSuffix);
+  },
+});
+
+export const upload = multer({ storage: storage });

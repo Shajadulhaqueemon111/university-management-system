@@ -54,10 +54,7 @@ export const createStudentZodValidationSchema = z.object({
       localGuardian: localGuardianValidationSchema,
       admissionSemester: z.string(),
       academicDepartment: z.string(),
-      profileImage: z
-        .string()
-        .url('Profile image must be a valid URL')
-        .optional(),
+
       isDeleted: z.boolean().default(false),
     }),
   }),
