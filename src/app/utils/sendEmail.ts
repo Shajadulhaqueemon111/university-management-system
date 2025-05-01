@@ -8,7 +8,7 @@ export const sendEmail = async (to: string, html: string) => {
     secure: config.node_env === 'production', // true for port 465, false for other ports
     auth: {
       user: 'mdshajdulhaqueemon@gmail.com',
-      pass: 'mmep vuoe qbdo sxdu',
+      pass: config.gmail_app_pass_key,
     },
   });
   await transporter.sendMail({

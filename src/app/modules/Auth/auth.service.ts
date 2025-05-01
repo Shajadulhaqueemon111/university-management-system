@@ -26,7 +26,7 @@ const loginUser = async (payload: TLogin) => {
     userId: user?.id,
     role: user?.role,
   };
-  console.log(jwtPayload);
+
   const acessToken = createToken(
     jwtPayload,
     config.jwt_access_secreet as string,
@@ -85,7 +85,7 @@ const refreshToken = async (token: string) => {
     token,
     config.jwt_refress_secreet as string,
   ) as JwtPayload;
-  console.log(decoded);
+
   //access routing baced autorization function mean using ka ka route use korta parbe
   const { role, userId, iat } = decoded;
   if (!userId || !role) {
@@ -110,7 +110,7 @@ const refreshToken = async (token: string) => {
     userId: user?.id,
     role: user?.role,
   };
-  console.log(jwtPayload);
+
   const acessToken = createToken(
     jwtPayload,
     config.jwt_access_secreet as string,
@@ -150,7 +150,6 @@ const resetPassword = async (
     config.jwt_access_secreet as string, //reset ar somay acces_secret user korta hoba
   ) as JwtPayload;
 
-  console.log(decoded);
   if (payload.id !== decoded.userId) {
     throw new AppError(httpStatus.FORBIDDEN, 'You Are Forbiddent access!');
   }
@@ -158,7 +157,7 @@ const resetPassword = async (
     payload.newPassword,
     Number(config.bycript_salt_rounded),
   );
-  console.log(newHashPassword);
+
   const result = await User.findOneAndUpdate(
     {
       id: decoded.userId,
@@ -179,4 +178,3 @@ export const AuthService = {
   forgetPassword,
   resetPassword,
 };
-// http://localhost:5000?id=A-0001&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBLTAwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDYwNDQwMjAsImV4cCI6MTc0NjA0NDYyMH0.6bPRkfFQhQxIQx3XVmbUSOCjMLxaeTfg0IeY9s9CVVE
