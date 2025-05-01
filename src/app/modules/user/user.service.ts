@@ -19,6 +19,7 @@ import AcademicDepartment from '../academicDepartment/academicDepartment.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Admin } from '../admin/admin.modle';
 import { verifyToken } from '../Auth/auth.utils';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //create user object
   const userData: Partial<TUser> = {};
@@ -47,6 +48,9 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   try {
     session.startTransaction();
     userData.id = await generateStudentId(admissionSemester);
+
+    //send image to cloudanary
+    sendImageToCloudinary();
     //create a user use(transaction-1)
     const newUser = await User.create([userData], { session }); //useing moongose session and startTransection arry system
 
@@ -192,7 +196,7 @@ const getMe = async (userId: string, role: string) => {
 };
 
 const changeStatusUpdate = async (id: string, payload: { status: string }) => {
-  const result = await User.findByIdAndDelete(id, payload);
+  const result = await User.findByIdAndUpdate(id, payload);
 
   return result;
 };

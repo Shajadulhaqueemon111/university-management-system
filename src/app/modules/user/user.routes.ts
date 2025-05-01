@@ -33,9 +33,9 @@ router.get(
   authValidateRequest(USER_ROLE.admin, USER_ROLE.student),
   UserController.getMe,
 );
-router.post(
+router.patch(
   '/change-status/:id',
-  authValidateRequest(USER_ROLE.admin, USER_ROLE.student),
+  authValidateRequest(USER_ROLE.admin),
   validateRequest(userValidation.changeStatusValidationSchema),
   UserController.changeStatus,
 );

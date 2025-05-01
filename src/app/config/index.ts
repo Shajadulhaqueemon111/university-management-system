@@ -13,4 +13,7 @@ export default {
   jwt_refress_expires: process.env.JWT_REFRESH_EXPIRES_IN,
   rest_pass_ui_link: process.env.RESET_PASS_UI_LINK,
   gmail_app_pass_key: process.env.GMAIL_APP_PASS_KEY,
+  cloudinary_cloud_name: process.env.CLOUDINARY_NAME,
+  cloudinary_api_key: process.env.CLOUDINARY_KEY,
+  cloudinary_api_secret: process.env.CLOUDINARY_SECRET,
 };
