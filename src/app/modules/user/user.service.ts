@@ -190,9 +190,16 @@ const getMe = async (userId: string, role: string) => {
   // return result;
   return result;
 };
+
+const changeStatusUpdate = async (id: string, payload: { status: string }) => {
+  const result = await User.findByIdAndDelete(id, payload);
+
+  return result;
+};
 export const UserService = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
   getMe,
+  changeStatusUpdate,
 };
