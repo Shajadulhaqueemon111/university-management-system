@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
+import AppError from '../../errors/AppErrors';
 const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
   //direct patay ta cayla
@@ -45,8 +46,21 @@ const createAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+//jar jar toke say tar data sara onno studet ar data dakta pabe na
+const getMe = catchAsync(async (req, res) => {
+  const { userId, role } = req.user;
+  const result = await UserService.getMe(userId, role);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get ME data is retrive succesfully',
+    data: result,
+  });
+});
 export const UserController = {
   createStudent,
   createFaculty,
   createAdmin,
+  getMe,
 };

@@ -25,13 +25,13 @@ router.post(
 );
 router.post(
   '/forget-password',
-  // authValidateRequest('admin', 'faculty', 'student'),
+  authValidateRequest('admin', 'faculty', 'student'),
   validateRequest(AuthValidation.refreshTokenValidationSchema),
   AuthController.forgetPassword,
 );
 router.post(
   '/reset-password',
-  // authValidateRequest('admin', 'faculty', 'student'),
+  authValidateRequest('admin', 'faculty', 'student'),
   validateRequest(AuthValidation.resetPasswordValidationSchema),
   AuthController.resetPassword,
 );

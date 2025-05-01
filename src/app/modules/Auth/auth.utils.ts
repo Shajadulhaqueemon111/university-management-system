@@ -2,6 +2,7 @@ import { User } from '../user/user.models';
 import AppError from '../../errors/AppErrors';
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export const validateUserForLogin = async (id: string) => {
   const user = await User.findOne({ id }).select('+password');
@@ -32,15 +33,6 @@ export const checkPassword = async (
   }
 };
 
-// export const isJWTIssuedBeforePasswordChanged = (
-//   passwordChangedTimestamp: Date,
-//   jwtIssuedTimestamp: number,
-// ): boolean => {
-//   if (!passwordChangedTimestamp) return false;
-
-//   const passwordChangedTime = Math.floor(
-//     passwordChangedTimestamp.getTime() / 1000,
-//   ); // Convert ms to seconds
-//   console.log(jwtIssuedTimestamp < passwordChangedTime);
-//   return jwtIssuedTimestamp < passwordChangedTime;
-// };
+export const verifyToken = (token: string, secret: string) => {
+  return jwt.verify(token, secret) as JwtPayload;
+};

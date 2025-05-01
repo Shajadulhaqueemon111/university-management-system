@@ -18,6 +18,7 @@ import { Faculty } from '../faculty/faculty.modle';
 import AcademicDepartment from '../academicDepartment/academicDepartment.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Admin } from '../admin/admin.modle';
+import { verifyToken } from '../Auth/auth.utils';
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //create user object
   const userData: Partial<TUser> = {};
@@ -173,8 +174,25 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     throw new Error(err);
   }
 };
+
+const getMe = async (userId: string, role: string) => {
+  let result = null;
+  if (role === 'student') {
+    result = await StudentModel.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'admin') {
+    result = await Admin.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'faculty') {
+    result = await Faculty.findOne({ id: userId }).populate('user');
+  }
+  // const result = await;
+  // return result;
+  return result;
+};
 export const UserService = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMe,
 };
