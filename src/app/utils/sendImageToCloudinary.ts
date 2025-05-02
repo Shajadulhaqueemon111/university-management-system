@@ -23,7 +23,7 @@ export const sendImageToCloudinary = (path: string, imageName: string) => {
     console.log(uploadResult);
 
     // Optimize delivery by resizing and applying auto-format and auto-quality
-    const optimizeUrl = cloudinary.url('shoes', {
+    const optimizeUrl = cloudinary.url(path, {
       fetch_format: 'auto',
       quality: 'auto',
     });
@@ -31,7 +31,7 @@ export const sendImageToCloudinary = (path: string, imageName: string) => {
     console.log(optimizeUrl);
 
     // Transform the image: auto-crop to square aspect_ratio
-    const autoCropUrl = cloudinary.url('shoes', {
+    const autoCropUrl = cloudinary.url(path, {
       crop: 'auto',
       gravity: 'auto',
       width: 500,
@@ -44,7 +44,7 @@ export const sendImageToCloudinary = (path: string, imageName: string) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, process.cwd() + '/uploads/'); //cw corrent directory
+    cb(null, process.cwd() + '/uploads'); //cw corrent directory
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);

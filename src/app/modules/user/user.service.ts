@@ -40,7 +40,7 @@ const createStudentIntoDB = async (
   const admissionSemester = await AcademicSemister.findById(
     payload.admissionSemester,
   );
-
+  console.log(admissionSemester);
   if (!admissionSemester) {
     throw new Error(
       `Admission semester with ID ${payload.admissionSemester} not found`,
@@ -54,10 +54,14 @@ const createStudentIntoDB = async (
     userData.id = await generateStudentId(admissionSemester);
 
     // cloudinary image and path name
+    if (!file) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'file does not uploaded');
+    }
     const imageName = `${userData.id}${payload?.name?.firstName}`;
-    const path = file;
+    const path = file?.path;
+    console.log(path);
     //send image to cloudanary
-    sendImageToCloudinary(imageName, path);
+    sendImageToCloudinary(path, imageName);
     //create a user use(transaction-1)
     const newUser = await User.create([userData], { session }); //useing moongose session and startTransection arry system
 

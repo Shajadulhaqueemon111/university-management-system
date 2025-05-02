@@ -10,11 +10,11 @@ const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
   //direct patay ta cayla
   // const studentData = req.body;
-
+  console.log(req.file);
   const result = await UserService.createStudentIntoDB(
-    req.file as unknown as string,
     password,
     studentData,
+    req.file,
   );
 
   sendResponse(res, {
