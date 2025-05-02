@@ -61,18 +61,23 @@ const createStudentIntoDB = async (
     const path = file?.path;
     console.log(path);
     //send image to cloudanary
-    sendImageToCloudinary(path, imageName);
+    const cloudinaryResponse = await sendImageToCloudinary(path, imageName);
+    console.log('Cloudinary Response:', cloudinaryResponse);
+    const { secure_url }: any = cloudinaryResponse;
+
     //create a user use(transaction-1)
     const newUser = await User.create([userData], { session }); //useing moongose session and startTransection arry system
-
+    console.log(newUser);
     if (!newUser.length) {
       //set id,_id as user
       throw new AppError(httpStatus.BAD_REQUEST, 'Faild to create user');
     }
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reffrence id
+    payload.profileImage = secure_url;
     //create a student use(transaction-2)
     const newStudent = await StudentModel.create([payload], { session }); //call the studentModel
+    console.log('jii', newStudent);
     if (!newStudent) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Faild to create Student');
     }
