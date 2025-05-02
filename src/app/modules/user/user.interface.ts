@@ -6,15 +6,15 @@ export type TUser = {
   password: string;
   needsPasswordChange: boolean;
   passwordChangedAt?: Date;
-  role: 'admin' | 'student' | 'faculty';
+  role: 'super-admin' | 'admin' | 'student' | 'faculty';
   isDeleted: boolean;
   status: 'in-progress' | 'blocked';
   createdAt: string;
   updatedAt: string;
-  isJWTIssuedBeforePasswordChanged(
-    passwordChangedTimestamp: Date,
-    jwtIssuedTimesstamp: number,
-  ): boolean;
+  // isJWTIssuedBeforePasswordChanged(
+  //   passwordChangedTimestamp: Date,
+  //   jwtIssuedTimesstamp: number,
+  // ): boolean;
 };
 
 export type TUserRole = keyof typeof USER_ROLE;

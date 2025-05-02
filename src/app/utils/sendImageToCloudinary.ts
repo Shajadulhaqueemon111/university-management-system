@@ -4,6 +4,7 @@ import config from '../config';
 import multer from 'multer';
 import AppError from '../errors/AppErrors';
 import httpStatus from 'http-status';
+import fs from 'fs';
 export const sendImageToCloudinary = async (
   path: string,
   imageName: string,
@@ -45,8 +46,17 @@ export const sendImageToCloudinary = async (
     });
 
     console.log('Auto-Cropped Image URL:', autoCropUrl);
+    //unnessary asycronuis local machineta take deleted function
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('file is deleted');
+      }
+    });
 
     // Return the secure URL of the uploaded image
+
     return uploadResult; // This will contain the `secure_url`
   } catch (error) {
     throw new AppError(

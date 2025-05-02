@@ -77,7 +77,7 @@ const createStudentIntoDB = async (
     payload.profileImage = secure_url;
     //create a student use(transaction-2)
     const newStudent = await StudentModel.create([payload], { session }); //call the studentModel
-    console.log('jii', newStudent);
+
     if (!newStudent) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Faild to create Student');
     }
